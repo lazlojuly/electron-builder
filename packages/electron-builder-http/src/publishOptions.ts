@@ -1,7 +1,7 @@
-export type PublishProvider = "github" | "bintray" | "s3" | "generic"
+export type PublishProvider = "github" | "bintray" | "s3" | "generic" | "electron-release-server"
 
 // typescript-json-schema generates only PublishConfiguration if it is specified in the list, so, it is not added here
-export type AllPublishOptions = string | GithubOptions | S3Options | GenericServerOptions | BintrayOptions
+export type AllPublishOptions = string | GithubOptions | S3Options | GenericServerOptions | BintrayOptions | ElectronReleaseServerOptions
 // https://github.com/YousefED/typescript-json-schema/issues/80
 export type Publish = AllPublishOptions | Array<AllPublishOptions> | null
 
@@ -121,6 +121,25 @@ export interface S3Options extends PublishConfiguration {
    * @default STANDARD
    */
   readonly storageClass?: "STANDARD" | "REDUCED_REDUNDANCY" | "STANDARD_IA" | null
+}
+
+/**
+ * Electron Release Server options.
+ */
+export interface ElectronReleaseServerOptions extends PublishConfiguration {
+  /**
+   * The base url. e.g. `https://bucket_name.s3.amazonaws.com`. You can use `${os}` (expanded to `mac`, `linux` or `win` according to target platform) and `${arch}` macros.
+   */
+  readonly url?: string
+
+  /**
+   * The channel.
+   * @default latest
+   */
+  readonly channel?: string | null
+  username?: string
+  password?: string
+  readonly protocol?: string
 }
 
 /** @private */

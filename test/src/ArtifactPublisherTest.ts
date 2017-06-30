@@ -6,6 +6,7 @@ import { createPublisher } from "electron-builder/out/publish/PublishManager"
 import { PublishContext } from "electron-publish"
 import { BintrayPublisher } from "electron-publish/out/BintrayPublisher"
 import { GitHubPublisher } from "electron-publish/out/gitHubPublisher"
+import { ElectronReleaseServerPublisher } from "electron-publish/out/ElectronReleaseServerPublisher"
 import isCi from "is-ci"
 import { join } from "path"
 
@@ -92,6 +93,38 @@ test("Bintray upload", async () => {
   finally {
     try {
       await publisher.deleteRelease()
+    }
+    finally {
+      await tmpDir.cleanup()
+    }
+  }
+})
+
+test("ElectronReleaseServer upload", async () => {
+  const version = versionNumber()
+
+  const tmpDir = new TmpDir()
+  const artifactPath = await tmpDir.getTempFile(`icon-${version}.icns`)
+  await copyFile(iconPath, artifactPath)
+
+  //noinspection SpellCheckingInspection
+  const publisher = new ElectronReleaseServerPublisher(
+    publishContext,
+    { 
+      provider: 'electron-release-server',
+      username: 'admin',
+      password: '1234',
+      url: 'http://localhost'
+    }, 
+    version
+  )
+  try {
+    await publisher.upload(artifactPath)
+    await publisher.upload(artifactPath)
+  }
+  finally {
+    try {
+      // await publisher.deleteRelease()
     }
     finally {
       await tmpDir.cleanup()

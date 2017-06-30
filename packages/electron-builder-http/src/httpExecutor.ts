@@ -258,7 +258,7 @@ function configurePipes(options: DownloadOptions, response: any, destination: st
   })
 }
 
-export function configureRequestOptions(options: RequestOptions, token?: string | null, method?: "GET" | "DELETE" | "PUT"): RequestOptions {
+export function configureRequestOptions(options: RequestOptions, token?: string | null, method?: "GET" | "DELETE" | "PUT" | "POST"): RequestOptions {
   if (method != null) {
     options.method = method
   }

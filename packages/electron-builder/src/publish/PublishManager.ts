@@ -8,6 +8,7 @@ import { asArray, isEmptyOrSpaces, isPullRequest, Lazy, log, safeStringifyJson, 
 import { HttpPublisher, PublishContext, Publisher, PublishOptions } from "electron-publish"
 import { BintrayPublisher } from "electron-publish/out/BintrayPublisher"
 import { GitHubPublisher } from "electron-publish/out/gitHubPublisher"
+import { ElectronReleaseServerPublisher } from "electron-publish/out/ElectronReleaseServerPublisher"
 import { MultiProgress } from "electron-publish/out/multiProgress"
 import { ensureDir, outputJson, readFile, writeFile } from "fs-extra-p"
 import isCi from "is-ci"
@@ -298,6 +299,9 @@ export function createPublisher(context: PublishContext, version: string, publis
     case "bintray":
       return new BintrayPublisher(context, publishConfig, version, options)
     
+    case "electron-release-server":
+      return new ElectronReleaseServerPublisher(context, publishConfig, version, options)
+      
     case "generic":
       return null
 
@@ -315,6 +319,9 @@ function requireProviderClass(provider: string): any | null {
     case "bintray":
       return BintrayPublisher
 
+    case "electron-release-server":
+      return ElectronReleaseServerPublisher
+      
     case "generic":
       return null
 
